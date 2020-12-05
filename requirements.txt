@@ -1,0 +1,11 @@
+numpy==1.19.3
+scipy
+sympy
+matplotlib
+pylint
+mock
+pytest
+pytest-lazy-fixture
+pytest-timeout
+pytest-mock
+testfixtures
