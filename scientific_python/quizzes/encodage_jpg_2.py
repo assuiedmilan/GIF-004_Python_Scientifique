@@ -34,6 +34,11 @@
            [ -1.,   2.],
            [  0.,  38.]])
 """
+import os
+from itertools import groupby
+
+import numpy as np
+
 
 def zigzag_path(side_length: int) -> list[tuple[int, int]]:
     """Generate a zigzag path through a squared matrix, starting from the top left corner and ending at the bottom right corner
@@ -47,7 +52,6 @@ def zigzag_path(side_length: int) -> list[tuple[int, int]]:
 
     def go_downward_diag(from_line, from_column):
         while from_column != 0 and from_line != lines:
-
             from_column = from_column - 1
             from_line = from_line + 1
             add_to_path(from_line, from_column)
@@ -56,7 +60,6 @@ def zigzag_path(side_length: int) -> list[tuple[int, int]]:
 
     def go_upward_diag(from_line, from_column):
         while from_line != 0 and from_column != columns:
-
             from_column = from_column + 1
             from_line = from_line - 1
             add_to_path(from_line, from_column)
@@ -76,7 +79,6 @@ def zigzag_path(side_length: int) -> list[tuple[int, int]]:
         return from_line, from_column
 
     def add_to_path(l, c):
-        print("Added ({}, {})".format(l, c))
         path.append((l, c))
 
     lines = side_length - 1
@@ -104,3 +106,37 @@ def zigzag_path(side_length: int) -> list[tuple[int, int]]:
             line, column = go_down_once(line, column)
 
     return path
+
+
+def zigzag_vecteur(image: np.ndarray) -> list[np.float64]:
+    zigzag = zigzag_path(image.shape[0])
+    values = [image[case] for case in zigzag]
+
+    return values
+
+
+def RLE_encodage(vector: list[np.float64]) -> np.ndarray:
+    groups = groupby(vector, key=None)
+    return np.asarray([(key, len(list(group))) for key, group in groups])
+
+
+def do_stuff():
+    im_dct_quant_block = np.load(os.path.join('..', '..', 'tests', 'resources', 'im_dct_quant_block.npy'))
+    return RLE_encodage(zigzag_vecteur(im_dct_quant_block))
+
+
+expected_value = np.array([[-49., 1.],
+                           [1., 2.],
+                           [0., 1.],
+                           [3., 1.],
+                           [1., 1.],
+                           [0., 7.],
+                           [-1., 1.],
+                           [1., 1.],
+                           [0., 1.],
+                           [-1., 3.],
+                           [0., 5.],
+                           [-1., 2.],
+                           [0., 38.]])
+
+assert (do_stuff() == expected_value).all()
