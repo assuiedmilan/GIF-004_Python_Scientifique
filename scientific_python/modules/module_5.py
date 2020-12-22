@@ -1,8 +1,7 @@
+"""Exercices sur module_5.tables_multidimensionelles"""
 import numpy as np
-import pytest
 
-
-def créer_matrice(m, n):
+def creer_matrice(m, n):
     """Créez une fonction créer_matrice qui prend en entrée deux entiers m et n et qui renvoie un tableau Numpy de taille (m, n) composé de valeurs allant de 1 à 𝑚×𝑛."""
 
     return np.arange(1, m*n+1).reshape(m, n)
@@ -62,15 +61,3 @@ def rotate():
     matrice4_4 = np.arange(1, 17).reshape(4, 4)
 
     return np.rot90(m=matrice4_4.reshape(2, 2, 2, 2), k=1).reshape(4, 4)
-
-@pytest.mark.parametrize("m, n",[(3, 3), (1, 1), (4, 6), (7, 5)])
-def test_créer_matrice(m , n):
-    matrix = créer_matrice(m, n)
-
-    assert matrix.shape == (m, n)
-
-    for i in range(m):
-        for j in range(n):
-            assert matrix[i, j] == n * i + j + 1
-
-
