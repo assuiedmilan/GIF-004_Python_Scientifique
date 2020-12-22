@@ -1,13 +1,38 @@
-import wget
+"""
+JPEG est une norme permettant de compresser des images.
+Cette norme exploite la faible sensibilité de l'oeil humain à la chrominance et s'en sert pour réduire la taille des images sans trop affecter leur perception humaine.
+Nous allons simplifier ici au maximum les explications, pour plus de détails, nous vous invitons à lire la page suivante.
+
+Ce Quiz porte sur la première partie de l'encodage JPEG, c'est-à-dire la phase de compression.
+Cette première étape est celle qui permet de réduire considérablement la taille de l'image au détriment d'une certaine perte de netteté.
+
+La compression JPEG consiste à diviser une image en petits blocs de 8x8 pixels, et d'appliquer dans chacun de ces blocs la transformée en cosinus discrète (DCT),
+ qui est une alternative de la transformée de Fourier.
+Ce changement dans le domaine fréquentiel permet de filtrer les hautes fréquences (correspondant à des changements brusques d'intensité dans l'image) qui sont moins visibles par l'oeil humain.
+Pour se faire, nous utilisons une des propriétés de la transformée utilisée:
+ l'amplitude des basses fréquences sera enregistrée en haut à gauche des blocs 8x8, et les hautes fréquences en bas à droite.
+Ainsi, il nous suffit de diviser chacun des blocs de notre image en une matrice 𝑄
+
+8x8 pour atténuer les fréquences voulues (cette étape s'appelle la quantification).
+
+Dans le contexte du Quiz, nous vous donnons une image nommée im transformée en niveau de gris ainsi que la matrice Q.
+
+Voici ce que vous devez faire:
+
+    Pour simplifier l'exercice, nous allons ignorer les bordures à droite et en bas de notre image pour avoir un nombre de lignes et de colonnes qui sont un multiple de 8.
+        Pour ce faire, il suffit de découper l'image (tableau Numpy) pour enlever ces bordures. Par exemple, si l'image est de taille 41x33, vous devez la découper en une image 40x32.
+    Redimensionnez l'image à l'aide de numpy.reshape afin d'avoir un tableau à quatre dimensions (ℎ,8,𝑤,8) de ℎ×𝑤 blocs de 8×8 pixels. Enregistrez le résultat dans la matrice im_divided.
+
+Appliquez la transformée en cosinus à l'aide de scipy.fftpack.dctn sur les axes 1 et 3 de votre matrice redimensionnée, en utilisant la norme 'ortho'. Enregistrez le résultat dans im_dct.
+Divisez chacun des blocs 8×8 par la matrice Q en arrondissant chacun des coefficients avec numpy.rint. Enregistrez le résultat dans la matrice im_dct_quant.
+"""
+
+import os
+
 import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
-
-# copier la joconde dans votre dossier Jupyter
-filename = wget.download('https://python.gel.ulaval.ca/media/notebook/joconde.jpg')
-
-im = np.array(Image.open("joconde.jpg").convert('L'), dtype=np.int16)
-im = im - 128  # on centre entre -128 et 127
+from scipy.fftpack import dctn
 
 Q = np.array([[16, 11, 10, 16, 24, 40, 51, 61],
               [12, 12, 14, 19, 26, 58, 60, 55],
@@ -18,8 +43,10 @@ Q = np.array([[16, 11, 10, 16, 24, 40, 51, 61],
               [49, 64, 78, 87, 103, 121, 120, 101],
               [72, 92, 95, 98, 112, 100, 103, 99]])
 
-plt.imshow(im)
-plt.show()
+
+def load_and_center(image):
+    image_to_center = np.array(Image.open(image).convert('L'), dtype=np.int16)
+    return image_to_center - 128
 
 
 def afficher_transformée(img_dct, img_dct_quant, w, h):
@@ -50,8 +77,6 @@ def afficher_transformée(img_dct, img_dct_quant, w, h):
 
     plt.show()
 
-from scipy.fftpack import dctn
-
 
 def remove_right_and_bottom_borders(image_to_cut, target_shape):
     """Cut the image into a matrix of the specified shape"""
@@ -80,14 +105,20 @@ def apply_cosine_discrete_transform(image_to_transform):
 
 def quantify(image_to_transform, quantifier):
     quantifier_reshaped = quantifier[np.newaxis, :, np.newaxis, :]
-    return np.rint(image_to_transform/quantifier_reshaped)
+    return np.rint(image_to_transform / quantifier_reshaped)
 
 
-target_shape = (8, 8)
-im_cut = remove_right_and_bottom_borders(im, target_shape)
-im_divided = cut_into_sub_matrixes(im_cut, target_shape)
+im = load_and_center(os.path.join('..', '..', 'tests', 'resources', 'Joconde.jpg'))
+
+plt.imshow(im)
+plt.show()
+
+image_shape_target = (8, 8)
+im_cut = remove_right_and_bottom_borders(im, image_shape_target)
+im_divided = cut_into_sub_matrixes(im_cut, image_shape_target)
 im_dct = apply_cosine_discrete_transform(im_divided)
 im_dct_quant = quantify(im_dct, Q)
-h = im_cut.shape[0]
-w = im_cut.shape[1]
-afficher_transformée(im_dct, im_dct_quant, w, h)
+
+afficher_transformée(im_dct, im_dct_quant, im_cut.shape[0], im_cut.shape[1])
+
+
