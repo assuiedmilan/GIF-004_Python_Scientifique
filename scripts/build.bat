@@ -8,6 +8,6 @@ rmdir dist /q /s
 
 call .venv\Scripts\activate.bat
 
-python setup.py bdist_wheel --universal
+poetry build
 
 popd
