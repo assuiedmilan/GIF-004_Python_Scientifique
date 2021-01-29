@@ -10,3 +10,4 @@ pytest-timeout
 pytest-mock
 testfixtures
 wget
+Pillow

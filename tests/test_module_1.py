@@ -1,10 +1,12 @@
+"""Tests for module 1"""
+
 import numpy
 import pytest
 from numpy.random import random
 
 from scientific_python.modules.module_1 import compute_mean
 from scientific_python.modules.module_1 import compute_variance
-from scientific_python.modules.module_1 import creer_table
+from scientific_python.modules.module_1 import créer_table
 from scientific_python.modules.module_1 import resolve_linear_equation
 from scientific_python.modules.module_1 import split
 
@@ -14,7 +16,7 @@ from scientific_python.modules.module_1 import split
                          )
 def test_create_table(lines, columns, initial_value):
     """Test table creation"""
-    table = creer_table(lines, columns, initial_value)
+    table = créer_table(lines, columns, initial_value)
 
     assert table.size == lines * columns
     assert table.shape == (lines, columns)

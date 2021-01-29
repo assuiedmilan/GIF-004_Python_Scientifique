@@ -6,7 +6,7 @@ from numpy import ndarray
 from numpy.linalg import inv
 
 
-def creer_table(lines: int, columns: int, initial_value: float) -> ndarray:
+def créer_table(lines: int, columns: int, initial_value: float) -> ndarray:
     """
     Create a n*m array initialized at a fixed values
 
@@ -53,7 +53,7 @@ def resolve_linear_equation(coefficients_matrix: ndarray, second_member_matrix: 
     return dot(inverted_coefficients_matrix, second_member_matrix)
 
 
-def compute_mean(table: ndarray) -> float:
+def compute_mean(table: ndarray) -> ndarray:
     """
     Compute mean of a table
 
@@ -67,7 +67,7 @@ def compute_mean(table: ndarray) -> float:
     return numpy.mean(table)
 
 
-def compute_variance(table: ndarray) -> float:
+def compute_variance(table: ndarray) -> ndarray:
     """
     Compute mean of a table
 
