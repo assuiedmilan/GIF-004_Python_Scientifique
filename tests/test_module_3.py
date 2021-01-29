@@ -30,6 +30,6 @@ def test_pi():
 def test_filter_image():
     """Test image filtration"""
 
-    filename = os.path.join('resources', 'joconde.jpg')
+    filename = os.path.join(os.path.dirname(__file__), 'resources', 'joconde.jpg')
     image = np.array(Image.open(filename).convert('L'))
     afficher_tf(image)
