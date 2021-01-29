@@ -134,6 +134,15 @@ good-names=x,
            b,
            lu,
            y,
+           C1,
+           C2,
+           v0,
+           C1_value,
+           C2_value,
+           m,
+           n,
+           i,
+           j
 
 # Naming style matching correct class attribute names
 class-attribute-naming-style=any

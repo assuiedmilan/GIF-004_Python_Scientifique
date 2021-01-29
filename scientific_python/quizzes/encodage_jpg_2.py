@@ -10,7 +10,7 @@
 
     Pour se faire, nous allons transformer nos blocs 8x8 en vecteur de 64 de longueur, en lisant nos blocs en zigzag, puis nous allons appliquer l'encodage RLE à ce vecteur.
 
-    Voici ceque vous devez faire:
+    Voici ce que vous devez faire:
 
         Écrire une fonction zigzag_vecteur qui prend en entrée un bloc 8×8 et renvoie le vecteur associé en faisant la lecture en zigzag.
          Pour vous faciliter votre tâche, nous défini dans le contexte de cet exercice les coordonnées successives d'une matrice 8×8 parcourue en zigzag.
@@ -36,11 +36,13 @@
 """
 import os
 from itertools import groupby
+from typing import List
+from typing import Tuple
 
 import numpy as np
 
 
-def zigzag_path(side_length: int) -> list[tuple[int, int]]:
+def zigzag_path(side_length: int) -> List[Tuple[int, int]]:
     """Generate a zigzag path through a squared matrix, starting from the top left corner and ending at the bottom right corner
 
     Args:
@@ -78,8 +80,8 @@ def zigzag_path(side_length: int) -> list[tuple[int, int]]:
 
         return from_line, from_column
 
-    def add_to_path(l, c):
-        path.append((l, c))
+    def add_to_path(line_index, column_index):
+        path.append((line_index, column_index))
 
     lines = side_length - 1
     columns = side_length - 1
@@ -108,21 +110,34 @@ def zigzag_path(side_length: int) -> list[tuple[int, int]]:
     return path
 
 
-def zigzag_vecteur(image: np.ndarray) -> list[np.float64]:
+def zigzag_vecteur(image: np.ndarray) -> List[np.float64]:
+    """Parse an image by 'zigzaging' it
+
+    Args:
+        image (np.ndarray): The image to parse
+
+    Returns:
+        All the image values, pixel by pixel, parsed using a zigzag vector
+    """
+
     zigzag = zigzag_path(image.shape[0])
     values = [image[case] for case in zigzag]
 
     return values
 
 
-def RLE_encodage(vector: list[np.float64]) -> np.ndarray:
+def rle_encodage(vector: List[np.float64]) -> np.ndarray:
+    """Encode a vector using the RLE algorithm
+
+    Args:
+        vector (list[np.float64]): the vector to encode
+
+    Returns:
+        An ndarray representing the encoded list of values
+    """
+
     groups = groupby(vector, key=None)
     return np.asarray([(key, len(list(group))) for key, group in groups])
-
-
-def do_stuff():
-    im_dct_quant_block = np.load(os.path.join('..', '..', 'tests', 'resources', 'im_dct_quant_block.npy'))
-    return RLE_encodage(zigzag_vecteur(im_dct_quant_block))
 
 
 expected_value = np.array([[-49., 1.],
@@ -139,4 +154,6 @@ expected_value = np.array([[-49., 1.],
                            [-1., 2.],
                            [0., 38.]])
 
-assert (do_stuff() == expected_value).all()
+im_dct_quant_block = np.load(os.path.join('..', '..', 'tests', 'resources', 'im_dct_quant_block.npy'))
+encoded_image = rle_encodage(zigzag_vecteur(im_dct_quant_block))
+assert (encoded_image == expected_value).all()

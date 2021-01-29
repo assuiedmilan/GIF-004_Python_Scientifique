@@ -64,6 +64,8 @@ def __process_convolved_value(core, image, line, column, a, b):
 
 
 def convoluer(core, image):
+    """Perform image convolution over core"""
+
     __validate_table_is_ndarray(core)
     __validate_table_is_ndarray(image)
     __validate_core_size(core)

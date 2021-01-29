@@ -7,7 +7,7 @@ from math import sin
 import matplotlib.pyplot as mpl
 import numpy as np
 
-from constants.temperatures_pickle import PICKLE
+from scientific_python.definitions import temperatures_pickle
 
 
 def draw_sinus():
@@ -44,7 +44,7 @@ def tracer_températures(date1: datetime.date, date2: datetime.date):
         None
     """
 
-    temperatures = pickle.loads(PICKLE)
+    temperatures = pickle.loads(temperatures_pickle.PICKLE)
 
     set_of_temperatures = list(filter(lambda x: date1 <= x[0] <= date2, temperatures))
 
