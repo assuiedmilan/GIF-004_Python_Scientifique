@@ -3,7 +3,7 @@ import math
 
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy import fft
+from scipy import fft  # pylint: disable=no-name-in-module
 from scipy import integrate
 from scipy.linalg import lu_factor
 from scipy.linalg import lu_solve
@@ -31,8 +31,8 @@ def compute_pi() -> float:
 
     Returns:
         A float approximation of pi
-
     """
+
     return 4 * integrate.quad(lambda x: np.sqrt(1 - x ** 2), 0, 1)[0]
 
 
@@ -45,7 +45,6 @@ def afficher_tf(image_to_transform: np.ndarray):
 
     Returns:
         None
-
     """
 
     image_fft = fft.fft2(image_to_transform)
