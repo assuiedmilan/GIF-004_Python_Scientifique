@@ -10,7 +10,7 @@
 
     Pour se faire, nous allons transformer nos blocs 8x8 en vecteur de 64 de longueur, en lisant nos blocs en zigzag, puis nous allons appliquer l'encodage RLE à ce vecteur.
 
-    Voici ceque vous devez faire:
+    Voici ce que vous devez faire:
 
         Écrire une fonction zigzag_vecteur qui prend en entrée un bloc 8×8 et renvoie le vecteur associé en faisant la lecture en zigzag.
          Pour vous faciliter votre tâche, nous défini dans le contexte de cet exercice les coordonnées successives d'une matrice 8×8 parcourue en zigzag.
@@ -36,11 +36,13 @@
 """
 import os
 from itertools import groupby
+from typing import List
+from typing import Tuple
 
 import numpy as np
 
 
-def zigzag_path(side_length: int) -> list[tuple[int, int]]:
+def zigzag_path(side_length: int) -> List[Tuple[int, int]]:
     """Generate a zigzag path through a squared matrix, starting from the top left corner and ending at the bottom right corner
 
     Args:
@@ -108,7 +110,7 @@ def zigzag_path(side_length: int) -> list[tuple[int, int]]:
     return path
 
 
-def zigzag_vecteur(image: np.ndarray) -> list[np.float64]:
+def zigzag_vecteur(image: np.ndarray) -> List[np.float64]:
     """Parse an image by 'zigzaging' it
 
     Args:
@@ -124,7 +126,7 @@ def zigzag_vecteur(image: np.ndarray) -> list[np.float64]:
     return values
 
 
-def rle_encodage(vector: list[np.float64]) -> np.ndarray:
+def rle_encodage(vector: List[np.float64]) -> np.ndarray:
     """Encode a vector using the RLE algorithm
 
     Args:
