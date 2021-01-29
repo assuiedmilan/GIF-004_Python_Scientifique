@@ -78,8 +78,8 @@ def zigzag_path(side_length: int) -> list[tuple[int, int]]:
 
         return from_line, from_column
 
-    def add_to_path(l, c):
-        path.append((l, c))
+    def add_to_path(line_index, column_index):
+        path.append((line_index, column_index))
 
     lines = side_length - 1
     columns = side_length - 1
@@ -109,20 +109,33 @@ def zigzag_path(side_length: int) -> list[tuple[int, int]]:
 
 
 def zigzag_vecteur(image: np.ndarray) -> list[np.float64]:
+    """Parse an image by 'zigzaging' it
+
+    Args:
+        image (np.ndarray): The image to parse
+
+    Returns:
+        All the image values, pixel by pixel, parsed using a zigzag vector
+    """
+
     zigzag = zigzag_path(image.shape[0])
     values = [image[case] for case in zigzag]
 
     return values
 
 
-def RLE_encodage(vector: list[np.float64]) -> np.ndarray:
+def rle_encodage(vector: list[np.float64]) -> np.ndarray:
+    """Encode a vector using the RLE algorithm
+
+    Args:
+        vector (list[np.float64]): the vector to encode
+
+    Returns:
+        An ndarray representing the encoded list of values
+    """
+
     groups = groupby(vector, key=None)
     return np.asarray([(key, len(list(group))) for key, group in groups])
-
-
-def do_stuff():
-    im_dct_quant_block = np.load(os.path.join('..', '..', 'tests', 'resources', 'im_dct_quant_block.npy'))
-    return RLE_encodage(zigzag_vecteur(im_dct_quant_block))
 
 
 expected_value = np.array([[-49., 1.],
@@ -139,4 +152,6 @@ expected_value = np.array([[-49., 1.],
                            [-1., 2.],
                            [0., 38.]])
 
-assert (do_stuff() == expected_value).all()
+im_dct_quant_block = np.load(os.path.join('..', '..', 'tests', 'resources', 'im_dct_quant_block.npy'))
+encoded_image = rle_encodage(zigzag_vecteur(im_dct_quant_block))
+assert (encoded_image == expected_value).all()
